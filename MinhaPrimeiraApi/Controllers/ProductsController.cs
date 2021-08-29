@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MinhaPrimeiraApi.Entities;
 using MinhaPrimeiraApi.Interfaces;
+using MinhaPrimeiraApi.ViewModels;
 
 namespace MinhaPrimeiraApi.Controllers
 {
@@ -14,11 +15,7 @@ namespace MinhaPrimeiraApi.Controllers
     {
         private IProductRepository _productRepository;
         private readonly ILogger<ProductsController> _logger;
-        private static List<Product> productss = new List<Product>(){
-            new Product(1,"Laptop Dell 300", 2500.0M),
-            new Product(2,"Laptop Dell 550", 2799.0M),
-            new Product(3,"Laptop Dell 450", 2389.0M)
-            };
+        
 
         public ProductsController(ILogger<ProductsController> logger, IProductRepository productRepository)
         {
@@ -37,30 +34,49 @@ namespace MinhaPrimeiraApi.Controllers
         [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult Get(int id)
+        public ActionResult<ProductViewModel> Get(int id)
         {
             var product = _productRepository.GetById(id);
 
             if (product == null)
                 return BadRequest();
 
-            return Ok(product);
+            var productViewModel = new ProductViewModel(){
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price
+            };
+            return Ok(productViewModel);
         }
 
         [HttpPost]
         [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Post))]
-        public ActionResult Post([FromBody]Product product)
+        public ActionResult Post([FromBody]ProductViewModel productViewModel)
         {
+            if(productViewModel ==null)
+                return NotFound();
+
+            var product = new Product(){
+                Name = productViewModel.Name,
+                Price = productViewModel.Price
+            };
+            
             _productRepository.Add(product);
             return CreatedAtAction("Get", new {id = product.Id}, product);
         }
 
         [HttpPut("{id:int}")]
         [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Put))]
-        public ActionResult Put(int id, [FromBody]Product product)
+        public ActionResult Put(int id, [FromBody]ProductViewModel productViewModel)
         {
-           if (id != product.Id)
+           if (id != productViewModel.Id)
                 return NotFound();
+
+            var product = new Product(){
+                Id = productViewModel.Id,
+                Name = productViewModel.Name,
+                Price = productViewModel.Price
+            };
 
             _productRepository.Update(product);
             return NoContent();
@@ -68,7 +84,7 @@ namespace MinhaPrimeiraApi.Controllers
 
         [HttpDelete("{id:int}")]
         [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Delete))]
-        public ActionResult<Product> Delete(int id)
+        public ActionResult<ProductViewModel> Delete(int id)
         {
             var product = _productRepository.GetById(id);
 
@@ -76,7 +92,13 @@ namespace MinhaPrimeiraApi.Controllers
                 return NotFound();
 
             _productRepository.Remove(product);
-            return product;
+
+            var productViewModel = new ProductViewModel(){
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price
+            };
+            return productViewModel;
         }
     }
 }
