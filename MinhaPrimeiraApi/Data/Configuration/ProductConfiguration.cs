@@ -13,6 +13,8 @@ namespace MinhaPrimeiraApi.Data.Configuration
             builder.Property(u => u.Id).HasColumnName("ID").HasColumnType("int").IsRequired();
             builder.Property(u => u.Name).HasColumnName("NAME").HasColumnType("varchar(100)").IsRequired();
             builder.Property(u => u.Price).HasColumnName("PRICE").HasColumnType("decimal(16,2)").IsRequired();
+            builder.Property(u => u.Created).HasColumnName("CREATED").HasColumnType("datetime2").IsRequired();
+
             
 
         }

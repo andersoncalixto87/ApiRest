@@ -16,5 +16,6 @@ namespace MinhaPrimeiraApi.ViewModels
         [Range(1, Double.PositiveInfinity, ErrorMessage = "The field {0} must be at least {1}" )]
 
         public decimal Price { get; set; }
+        public DateTime Created { get; set; }
     }
 }

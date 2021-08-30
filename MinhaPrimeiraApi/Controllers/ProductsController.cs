@@ -28,8 +28,18 @@ namespace MinhaPrimeiraApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult Get()
         {
-            var products = _productRepository.GetAll();
-            return Ok(products);
+            var products = _productRepository.GetAll();            
+
+            var productsViewModel = products.Select(c => new ProductViewModel
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Price = c.Price,
+                Created = c.Created.ToLocalTime()
+
+            });
+
+            return Ok(productsViewModel);
         }
         [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -44,7 +54,8 @@ namespace MinhaPrimeiraApi.Controllers
             var productViewModel = new ProductViewModel(){
                 Id = product.Id,
                 Name = product.Name,
-                Price = product.Price
+                Price = product.Price,
+                Created = product.Created.ToLocalTime()
             };
             return Ok(productViewModel);
         }

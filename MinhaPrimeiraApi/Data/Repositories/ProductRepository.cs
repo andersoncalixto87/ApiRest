@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MinhaPrimeiraApi.Entities;
+using MinhaPrimeiraApi.Exceptions;
 using MinhaPrimeiraApi.Interfaces;
 
 namespace MinhaPrimeiraApi.Data.Repositories
@@ -20,7 +21,7 @@ namespace MinhaPrimeiraApi.Data.Repositories
                 _apiRestContext.Set<Product>().Add(product);
                 _apiRestContext.SaveChanges();
             }
-            catch (Exception ex )
+            catch (CustomException ex )
             {                
                 throw ex;
             }
@@ -43,7 +44,7 @@ namespace MinhaPrimeiraApi.Data.Repositories
                 _apiRestContext.Set<Product>().Remove(product);
                 _apiRestContext.SaveChanges();
             }
-            catch (Exception ex )
+            catch (CustomException ex )
             {                
                 throw ex;
             }
@@ -56,7 +57,7 @@ namespace MinhaPrimeiraApi.Data.Repositories
                 _apiRestContext.Set<Product>().Update(product);
                 _apiRestContext.SaveChanges();
             }
-            catch (Exception ex )
+            catch (CustomException ex)
             {                
                 throw ex;
             }
